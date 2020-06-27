@@ -1,0 +1,32 @@
+version: '3'
+services:
+  # This is the metasploit container
+  metasploit:
+    # metasploit image is being used
+    image: metasploitframework/metasploit-framework
+    # This command is run so that the container does not exit
+    command: tail -f /dev/null
+    networks:
+       network:
+          # This is the container's IP
+          ipv4_address: 172.28.0.2
+
+  # This is the target container running an nginx webserver
+  target:
+    # nginx image is being used
+    image: nginx
+    networks:
+       network:
+          # This is the container's IP
+          ipv4_address: 172.28.0.3
+    # Map the host port 8080 to the container's port 80
+    ports:
+      - "8080:80"
+
+networks:
+  network:
+    ipam:
+      driver: default
+      # Create a network in this subnet
+      config:
+        - subnet: "172.28.0.0/16"
